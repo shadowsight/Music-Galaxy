@@ -23,6 +23,11 @@ namespace WebA.Controllers
             return View();
         }
 
+        public IActionResult Projects()
+        {
+            return View();
+        }
+
         public IActionResult Tools()
         {
             return View();
