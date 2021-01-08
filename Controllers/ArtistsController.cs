@@ -9,23 +9,22 @@ using Music_Galaxy.Data;
 
 namespace Music_Galaxy.Models
 {
-    public class SongsController : Controller
+    public class ArtistsController : Controller
     {
         private readonly MusicGalaxyContext _context;
 
-        public SongsController(MusicGalaxyContext context)
+        public ArtistsController(MusicGalaxyContext context)
         {
             _context = context;
         }
 
-        // GET: Songs
+        // GET: Artists
         public async Task<IActionResult> Index()
         {
-            var musicGalaxyContext = _context.Songs.Include(s => s.Album);
-            return View(await musicGalaxyContext.ToListAsync());
+            return View(await _context.Artists.ToListAsync());
         }
 
-        // GET: Songs/Details/5
+        // GET: Artists/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,42 +32,39 @@ namespace Music_Galaxy.Models
                 return NotFound();
             }
 
-            var song = await _context.Songs
-                .Include(s => s.Album)
+            var artist = await _context.Artists
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (song == null)
+            if (artist == null)
             {
                 return NotFound();
             }
 
-            return View(song);
+            return View(artist);
         }
 
-        // GET: Songs/Create
+        // GET: Artists/Create
         public IActionResult Create()
         {
-            ViewData["AlbumID"] = new SelectList(_context.Albums, "ArtistID", "Title");
             return View();
         }
 
-        // POST: Songs/Create
+        // POST: Artists/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,AlbumID,ArtistID")] Song song)
+        public async Task<IActionResult> Create([Bind("ID,LastName,FirstMidName")] Artist artist)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(song);
+                _context.Add(artist);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AlbumID"] = new SelectList(_context.Albums, "ArtistID", "Title", song.AlbumID);
-            return View(song);
+            return View(artist);
         }
 
-        // GET: Songs/Edit/5
+        // GET: Artists/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,23 +72,22 @@ namespace Music_Galaxy.Models
                 return NotFound();
             }
 
-            var song = await _context.Songs.FindAsync(id);
-            if (song == null)
+            var artist = await _context.Artists.FindAsync(id);
+            if (artist == null)
             {
                 return NotFound();
             }
-            ViewData["AlbumID"] = new SelectList(_context.Albums, "ArtistID", "Title", song.AlbumID);
-            return View(song);
+            return View(artist);
         }
 
-        // POST: Songs/Edit/5
+        // POST: Artists/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,AlbumID,ArtistID")] Song song)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,LastName,FirstMidName")] Artist artist)
         {
-            if (id != song.ID)
+            if (id != artist.ID)
             {
                 return NotFound();
             }
@@ -101,12 +96,12 @@ namespace Music_Galaxy.Models
             {
                 try
                 {
-                    _context.Update(song);
+                    _context.Update(artist);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SongExists(song.ID))
+                    if (!ArtistExists(artist.ID))
                     {
                         return NotFound();
                     }
@@ -117,11 +112,10 @@ namespace Music_Galaxy.Models
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AlbumID"] = new SelectList(_context.Albums, "ArtistID", "Title", song.AlbumID);
-            return View(song);
+            return View(artist);
         }
 
-        // GET: Songs/Delete/5
+        // GET: Artists/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -129,31 +123,30 @@ namespace Music_Galaxy.Models
                 return NotFound();
             }
 
-            var song = await _context.Songs
-                .Include(s => s.Album)
+            var artist = await _context.Artists
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (song == null)
+            if (artist == null)
             {
                 return NotFound();
             }
 
-            return View(song);
+            return View(artist);
         }
 
-        // POST: Songs/Delete/5
+        // POST: Artists/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var song = await _context.Songs.FindAsync(id);
-            _context.Songs.Remove(song);
+            var artist = await _context.Artists.FindAsync(id);
+            _context.Artists.Remove(artist);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SongExists(int id)
+        private bool ArtistExists(int id)
         {
-            return _context.Songs.Any(e => e.ID == id);
+            return _context.Artists.Any(e => e.ID == id);
         }
     }
 }

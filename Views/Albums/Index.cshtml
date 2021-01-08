@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Music_Galaxy.Models.Song>
+﻿@model IEnumerable<Music_Galaxy.Models.Album>
 
 @{
     ViewData["Title"] = "Index";
@@ -16,10 +16,7 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ArtistID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Album)
+                @Html.DisplayNameFor(model => model.ReleaseDate)
             </th>
             <th></th>
         </tr>
@@ -29,13 +26,13 @@
         {
             <tr>
                 <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ArtistID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Album.Title)
+                    @Html.DisplayFor(modelItem => item.ReleaseDate)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
