@@ -10,8 +10,8 @@ using Music_Galaxy.Data;
 namespace Music_Galaxy.Migrations
 {
     [DbContext(typeof(MusicGalaxyContext))]
-    [Migration("20210107232628_AddModels")]
-    partial class AddModels
+    [Migration("20210412042702_reset")]
+    partial class reset
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,15 +23,12 @@ namespace Music_Galaxy.Migrations
 
             modelBuilder.Entity("Music_Galaxy.Models.Album", b =>
                 {
-                    b.Property<int>("ArtistID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("ArtistID1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ID")
+                    b.Property<int>("ArtistID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ReleaseDate")
@@ -42,9 +39,9 @@ namespace Music_Galaxy.Migrations
                         .HasColumnType("nvarchar(50)")
                         .HasMaxLength(50);
 
-                    b.HasKey("ArtistID");
+                    b.HasKey("ID");
 
-                    b.HasIndex("ArtistID1");
+                    b.HasIndex("ArtistID");
 
                     b.ToTable("Albums");
                 });
@@ -82,29 +79,22 @@ namespace Music_Galaxy.Migrations
                     b.Property<int>("AlbumID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ArtistID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ArtistID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
                     b.HasIndex("AlbumID");
 
-                    b.HasIndex("ArtistID");
-
                     b.ToTable("Songs");
                 });
 
             modelBuilder.Entity("Music_Galaxy.Models.Album", b =>
                 {
-                    b.HasOne("Music_Galaxy.Models.Artist", null)
+                    b.HasOne("Music_Galaxy.Models.Artist", "Artist")
                         .WithMany("Albums")
-                        .HasForeignKey("ArtistID1")
+                        .HasForeignKey("ArtistID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -116,10 +106,6 @@ namespace Music_Galaxy.Migrations
                         .HasForeignKey("AlbumID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Music_Galaxy.Models.Artist", "Artist")
-                        .WithMany()
-                        .HasForeignKey("ArtistID");
                 });
 #pragma warning restore 612, 618
         }

@@ -21,7 +21,7 @@ namespace Music_Galaxy.Models
         // GET: Songs
         public async Task<IActionResult> Index()
         {
-            var musicGalaxyContext = _context.Songs.Include(s => s.Album);
+            var musicGalaxyContext = _context.Songs.Include(s => s.Album).ThenInclude(a => a.Artist);
             return View(await musicGalaxyContext.ToListAsync());
         }
 
@@ -35,7 +35,9 @@ namespace Music_Galaxy.Models
 
             var song = await _context.Songs
                 .Include(s => s.Album)
+                .ThenInclude(a => a.Artist)
                 .FirstOrDefaultAsync(m => m.ID == id);
+
             if (song == null)
             {
                 return NotFound();
@@ -47,7 +49,7 @@ namespace Music_Galaxy.Models
         // GET: Songs/Create
         public IActionResult Create()
         {
-            ViewData["AlbumID"] = new SelectList(_context.Albums, "ArtistID", "Title");
+            ViewData["AlbumID"] = new SelectList(_context.Albums, "ID", "Title");
             return View();
         }
 
@@ -56,7 +58,7 @@ namespace Music_Galaxy.Models
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Title,AlbumID,ArtistID")] Song song)
+        public async Task<IActionResult> Create([Bind("ID,Title,AlbumID")] Song song)
         {
             if (ModelState.IsValid)
             {
@@ -64,7 +66,7 @@ namespace Music_Galaxy.Models
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AlbumID"] = new SelectList(_context.Albums, "ArtistID", "Title", song.AlbumID);
+            ViewData["AlbumID"] = new SelectList(_context.Albums, "ID", "Title", song.AlbumID);
             return View(song);
         }
 
@@ -90,7 +92,7 @@ namespace Music_Galaxy.Models
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,AlbumID,ArtistID")] Song song)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,AlbumID")] Song song)
         {
             if (id != song.ID)
             {
@@ -117,7 +119,7 @@ namespace Music_Galaxy.Models
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AlbumID"] = new SelectList(_context.Albums, "ArtistID", "Title", song.AlbumID);
+            ViewData["AlbumID"] = new SelectList(_context.Albums, "AlbumID", "Title", song.AlbumID);
             return View(song);
         }
 
@@ -150,6 +152,7 @@ namespace Music_Galaxy.Models
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool SongExists(int id)
         {

@@ -77,17 +77,13 @@ namespace Music_Galaxy.Migrations
                     b.Property<int>("AlbumID")
                         .HasColumnType("int");
 
-                    b.Property<int>("ArtistID")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
                     b.HasIndex("AlbumID");
-
-                    b.HasIndex("ArtistID");
 
                     b.ToTable("Songs");
                 });
@@ -106,12 +102,6 @@ namespace Music_Galaxy.Migrations
                     b.HasOne("Music_Galaxy.Models.Album", "Album")
                         .WithMany("Songs")
                         .HasForeignKey("AlbumID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Music_Galaxy.Models.Artist", "Artist")
-                        .WithMany()
-                        .HasForeignKey("ArtistID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

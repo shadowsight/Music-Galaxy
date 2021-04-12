@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Music_Galaxy.Migrations
 {
-    public partial class AddModels : Migration
+    public partial class reset : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,9 +48,8 @@ namespace Music_Galaxy.Migrations
                 {
                     ID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(nullable: true),
-                    AlbumID = table.Column<int>(nullable: false),
-                    ArtistID = table.Column<int>(nullable: false)
+                    Title = table.Column<string>(nullable: false),
+                    AlbumID = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,12 +60,6 @@ namespace Music_Galaxy.Migrations
                         principalTable: "Albums",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Songs_Artists_ArtistID",
-                        column: x => x.ArtistID,
-                        principalTable: "Artists",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -78,11 +71,6 @@ namespace Music_Galaxy.Migrations
                 name: "IX_Songs_AlbumID",
                 table: "Songs",
                 column: "AlbumID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Songs_ArtistID",
-                table: "Songs",
-                column: "ArtistID");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

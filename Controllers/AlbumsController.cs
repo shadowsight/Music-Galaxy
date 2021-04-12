@@ -21,7 +21,8 @@ namespace Music_Galaxy.Models
         // GET: Albums
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Albums.ToListAsync());
+            var musicContext = _context.Albums.Include(a => a.Artist);
+            return View(await musicContext.ToListAsync());
         }
 
         // GET: Albums/Details/5
@@ -32,9 +33,8 @@ namespace Music_Galaxy.Models
                 return NotFound();
             }
 
-            string query = "SELECT * FROM Albums WHERE ID = {0}";
             var album = await _context.Albums
-                .FromSqlRaw(query, id)
+                .Include(d => d.Songs)
                 .Include(d => d.Artist)
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
@@ -67,6 +67,7 @@ namespace Music_Galaxy.Models
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["ArtistID"] = new SelectList(_context.Artists, "ID", "FullName", album.ArtistID);
             return View(album);
         }
 
@@ -78,14 +79,55 @@ namespace Music_Galaxy.Models
                 return NotFound();
             }
 
-            var album = await _context.Albums.FindAsync(id);
+            var album = await _context.Albums
+                .Include(i => i.Artist)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.ID == id);
+
             if (album == null)
             {
                 return NotFound();
             }
+            ViewData["ArtistID"] = new SelectList(_context.Artists, "ID", "FullName", album.ArtistID);
             return View(album);
         }
 
+        [HttpPost, ActionName("Edit")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditPost(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var albumToUpdate = await _context.Albums
+                .FirstOrDefaultAsync(m => m.ID == id);
+
+            if (await TryUpdateModelAsync<Album>(
+                albumToUpdate,
+                "",
+                i => i.Title, i => i.ReleaseDate, i => i.ReleaseDate, i => i.ArtistID))
+            {
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateException /* ex */)
+                {
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            ViewData["ArtistID"] = new SelectList(_context.Artists, "ID", "FullName", albumToUpdate.ArtistID);
+            return View(albumToUpdate);
+        }
+
+        /*
         // POST: Albums/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -120,6 +162,7 @@ namespace Music_Galaxy.Models
             }
             return View(album);
         }
+        */
 
         // GET: Albums/Delete/5
         public async Task<IActionResult> Delete(int? id)

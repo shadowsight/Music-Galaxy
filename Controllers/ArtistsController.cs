@@ -32,8 +32,13 @@ namespace Music_Galaxy.Models
                 return NotFound();
             }
 
+            //var artist = await _context.Artists
+            //    .FirstOrDefaultAsync(m => m.ID == id);
+
             var artist = await _context.Artists
-                .FirstOrDefaultAsync(m => m.ID == id);
+                .Include(a => a.Albums).AsNoTracking()
+                 .FirstOrDefaultAsync(m => m.ID == id);
+
             if (artist == null)
             {
                 return NotFound();

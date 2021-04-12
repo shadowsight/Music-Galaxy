@@ -16,10 +16,10 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ArtistID)
+                @Html.DisplayNameFor(model => model.Album)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Album)
+                @Html.DisplayNameFor(model => model.Album.Artist)
             </th>
             <th></th>
         </tr>
@@ -32,10 +32,10 @@
                     @Html.DisplayFor(modelItem => item.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ArtistID)
+                    @Html.DisplayFor(modelItem => item.Album.Title)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Album.Title)
+                    @Html.DisplayFor(modelItem => item.Album.Artist.FullName)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
