@@ -5,9 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using WebA.Models;
+using MusicGalaxy.Models;
 
-namespace WebA.Controllers
+namespace MusicGalaxy.Controllers
 {
     public class HomeController : Controller
     {

@@ -1,4 +1,4 @@
-namespace WebA.Models
+namespace MusicGalaxy.Models
 {
     public class ErrorViewModel
     {
